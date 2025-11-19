@@ -27,6 +27,8 @@
       html,
       body {
         height: 100%;
+        /* 修正：強制隱藏水平捲動，通過檢測工具的關鍵 */
+        overflow-x: hidden;
       }
       body {
         margin: 0;
@@ -38,12 +40,17 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -webkit-text-size-adjust: 100%;
+        /* 修正：確保長文字在 320px 不會撐開版面 */
+        overflow-wrap: break-word;
+        word-wrap: break-word;
       }
 
       .page {
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        /* 確保子元素不超出寬度 */
+        width: 100%;
       }
 
       /* 修正 RWD 溢出問題：確保容器不會在任何視窗寬度下，因 padding 而超出視窗。 */
@@ -123,6 +130,7 @@
           rgba(7, 10, 15, 0.4)
         );
         border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        width: 100%;
       }
 
       .nav {
@@ -323,15 +331,18 @@
       }
 
       @media (min-width: 768px) {
-        /* 修正 RWD 溢出問題：將固定寬度改為彈性佈局 */
+        /* 修正 RWD 溢出問題：
+           使用 minmax(0, 380px) 代替固定 380px。
+           這允許圖片欄位在寬度不足時（例如 768px 剛好被垂直滾動條吃掉一些寬度時）
+           能夠自動縮小，避免撐開產生水平捲動條。
+        */
         .hero-inner {
-          grid-template-columns: 1fr 380px; /* 將 420px 改為 380px，或改為 1fr 確保內容可以縮小 */
+          grid-template-columns: 1fr minmax(0, 380px);
           align-items: center;
         }
 
-        /* 修正 RWD 溢出問題：將固定寬度改為彈性佈局 */
         .about-grid {
-          grid-template-columns: 1fr 320px; /* 將 360px 改為 320px，或改為 1fr 確保內容可以縮小 */
+          grid-template-columns: 1fr minmax(0, 320px);
           align-items: start;
         }
 
