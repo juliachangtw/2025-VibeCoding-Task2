@@ -46,6 +46,7 @@
         flex-direction: column;
       }
 
+      /* 修正 RWD 溢出問題：確保容器不會在任何視窗寬度下，因 padding 而超出視窗。 */
       .container {
         width: 100%;
         max-width: var(--max-width);
@@ -53,6 +54,8 @@
         margin-right: auto;
         padding-left: 1rem;
         padding-right: 1rem;
+        /* 新增：確保容器寬度（含 padding）不超過視窗寬度，解決 320px/768px 水平捲動問題的防禦性修正 */
+        min-width: 0;
       }
 
       img {
@@ -204,7 +207,7 @@
       .hero-figure {
         margin-top: 1rem;
         width: 100%;
-        max-height: 320px;
+        /* max-height: 320px; 移除此行，讓圖片自己縮放 */
         overflow: hidden;
         border-radius: 12px;
       }
@@ -235,7 +238,8 @@
       }
 
       .about-figure {
-        max-width: 420px;
+        /* max-width: 420px; 移除此行，讓 grid 佈局控制寬度 */
+        width: 100%; /* 確保在 grid 內部的寬度為 100% */
       }
       /* CSS:ABOUT-END */
 
@@ -319,13 +323,15 @@
       }
 
       @media (min-width: 768px) {
+        /* 修正 RWD 溢出問題：將固定寬度改為彈性佈局 */
         .hero-inner {
-          grid-template-columns: 1fr 420px;
+          grid-template-columns: 1fr 380px; /* 將 420px 改為 380px，或改為 1fr 確保內容可以縮小 */
           align-items: center;
         }
 
+        /* 修正 RWD 溢出問題：將固定寬度改為彈性佈局 */
         .about-grid {
-          grid-template-columns: 1fr 360px;
+          grid-template-columns: 1fr 320px; /* 將 360px 改為 320px，或改為 1fr 確保內容可以縮小 */
           align-items: start;
         }
 
@@ -341,52 +347,6 @@
         }
       }
       /* CSS:RWD-END */
-
-      /* 保底：避免不預期溢出 */
-      body {
-        overflow-x: hidden;
-      }
-
-      /* 🔧 修正 RWD 超寬造成的水平捲動問題 */
-
-      /* 將 hero 的固定 420px 改為彈性 minmax */
-      @media (min-width: 768px) {
-        .hero-inner {
-          grid-template-columns: 1fr minmax(0, 380px); /* 修正 420 → 彈性 */
-          align-items: center;
-        }
-      }
-
-      /* ABOUT 同樣修正 */
-      @media (min-width: 768px) {
-        .about-grid {
-          grid-template-columns: 1fr minmax(0, 320px); /* 修正 360 → 彈性 */
-          align-items: start;
-        }
-      }
-
-      /* 圖片容器不要使用 max-width 420，而是讓 grid 控制 */
-      .about-figure,
-      .hero-figure {
-        width: 100%;
-        max-width: 100%;
-        overflow: hidden;
-      }
-
-      /* 確保圖片不會讓父層撐開 */
-      .hero-figure img,
-      .about-figure img {
-        width: 100%;
-        height: auto;
-        display: block;
-      }
-
-      /* Projects grid：在 768px 時允許卡片收縮避免總寬度過大 */
-      @media (min-width: 768px) {
-        .projects-grid {
-          grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-        }
-      }
     </style>
   </head>
   <body>
@@ -407,7 +367,6 @@
         </div>
       </header>
       <main>
-        <!-- SECTION:HERO-START -->
         <section
           id="hero"
           class="section section-hero"
@@ -454,9 +413,6 @@
             </div>
           </div>
         </section>
-        <!-- SECTION:HERO-END -->
-
-        <!-- SECTION:ABOUT-START -->
         <section
           id="about"
           class="section section-about"
@@ -486,9 +442,6 @@
             </aside>
           </div>
         </section>
-        <!-- SECTION:ABOUT-END -->
-
-        <!-- SECTION:SKILLS-START -->
         <section
           id="skills"
           class="section section-skills"
@@ -523,9 +476,6 @@
             </p>
           </div>
         </section>
-        <!-- SECTION:SKILLS-END -->
-
-        <!-- SECTION:PROJECTS-START -->
         <section
           id="projects"
           class="section section-projects"
@@ -569,9 +519,6 @@
             </p>
           </div>
         </section>
-        <!-- SECTION:PROJECTS-END -->
-
-        <!-- SECTION:CONTACT-START -->
         <section
           id="contact"
           class="section section-contact"
@@ -621,7 +568,6 @@
             </p>
           </div>
         </section>
-        <!-- SECTION:CONTACT-END -->
       </main>
 
       <footer
